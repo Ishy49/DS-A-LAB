@@ -47,23 +47,23 @@ table(titanic$Pclass, titanic$Survived)
 
 # Facebook dataset
 # 2a. Post with maximum likes
-facebook[which.max(facebook$like), ]
+fb[which.max(fb$like), ]
 
 # 2b. Average shares per post
-mean(facebook$share, na.rm=TRUE)
+mean(fb$share, na.rm=TRUE)
 
 # 2c. New column Engagement
-facebook$Engagement <- facebook$like + facebook$comment + facebook$share
+fb$Engagement <- fb$like + fb$comment + fb$share
 
 # Lung Capacity dataset
 # 3a. Children below 12
-subset(lungcap, Age < 12)
+subset(lungcap_data, Age < 12)
 
 # 3b. Average LungCap by Gender
-aggregate(LungCap ~ Gender, data=lungcap, FUN=mean)
+aggregate(lungcap ~ Gender, data=lungcap_data, FUN=mean)
 
 # 3c. Child with max Lung Capacity
-lungcap[which.max(lungcap$LungCap), ]
+lungcap_data[which.max(lungcap_data$LungCap), ]
 
 library(dplyr)
 
@@ -87,7 +87,7 @@ titanic %>%
   summarise(mean_fare = mean(fare, na.rm=TRUE))
 
 
-facebook %>%
+fb %>%
   group_by(Type) %>%
   summarise(avg_likes = mean(like, na.rm=TRUE))
 
@@ -101,7 +101,7 @@ titanic$age[is.na(titanic$age)] <- median(titanic$age, na.rm=TRUE)
 titanic <- titanic[!is.na(titanic$embarked), ]
 
 # 4. Fill missing LungCap with mean
-lungcap$LungCap[is.na(lungcap$LungCap)] <- mean(lungcap$LungCap, na.rm=TRUE)
+lungcap_data$LungCap[is.na(lungcap_data$LungCap)] <- mean(lungcap_data$LungCap, na.rm=TRUE)
 
 
 # Titanic
@@ -110,11 +110,12 @@ barplot(table(titanic$pclass), main="Passenger Count by Class", col="orange")
 pie(table(titanic$survived), main="Survival Proportion", col=c("red", "green"))
 
 # LungCap
-boxplot(LungCap ~ Gender, data=lungcap, main="LungCap by Gender", col=c("pink","lightblue"))
+boxplot(LungCap ~ Gender, data=lungcap
+      , main="LungCap by Gender", col=c("pink","lightblue"))
 
 # Facebook
-plot(facebook$like, facebook$comment, main="Likes vs Comments", xlab="Likes", ylab="Comments")
-hist(facebook$share, main="Distribution of Shares", col="purple")
+plot(fb$like, fb$comment, main="Likes vs Comments", xlab="Likes", ylab="Comments")
+hist(fb$share, main="Distribution of Shares", col="purple")
 
 
 
@@ -140,12 +141,12 @@ titanic$age <- ifelse(titanic$age < lower, lower,
                       ifelse(titanic$age > upper, upper, titanic$age))
 
 # LungCap dataset
-Q1 <- quantile(lungcap$LungCap, 0.25, na.rm=TRUE)
-Q3 <- quantile(lungcap$LungCap, 0.75, na.rm=TRUE)
+Q1 <- quantile(lungcap_data$LungCap, 0.25, na.rm=TRUE)
+Q3 <- quantile(lungcap_data$LungCap, 0.75, na.rm=TRUE)
 IQR_val <- Q3 - Q1
 lower <- Q1 - 1.5*IQR_val
 upper <- Q3 + 1.5*IQR_val
-outliers <- lungcap$LungCap < lower | lungcap$LungCap > upper
+outliers <- lungcap$LungCap < lower | lungcap_data$LungCap > upper
 mean_before <- mean(lungcap$LungCap, na.rm=TRUE)
 lungcap_clean <- lungcap[!outliers, ]
 mean_after <- mean(lungcap_clean$LungCap, na.rm=TRUE)
