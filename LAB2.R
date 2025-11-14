@@ -153,3 +153,4 @@ mean_after <- mean(lungcap_clean$LungCap, na.rm=TRUE)
 mean_before; mean_after
 
 
+
